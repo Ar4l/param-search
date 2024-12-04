@@ -37,13 +37,18 @@ class Hyperparams(Experiment):
     steps         :int = 100
     batch_size    :int = search(16, 32)
 
+    # and automatic string substitution!
+    dataset_name  :str = search('alphabet', 'numbers')
+    dataset_path  :str = search('data/raw/{dataset_name}')
+
     def run(self) -> dict:
         ''' Runs this setting of parameters (override this method)
             Auto-stores the returned dict in a parquet.
         '''
 
         results = {
-            'total samples': self.batch_size * self.steps
+            'total samples':  self.batch_size * self.steps, 
+            'path':           self.dataset_path
         }
         print(results)
 
@@ -56,7 +61,7 @@ class Hyperparams(Experiment):
         optionally can return formatted dataframe to be saved 
         '''
         import plotly.express as px 
-        fig = px.bar(results, x='index', y='total_samples)
+        fig = px.bar(results, x='index', y='total_samples')
         fig.show()
 ```
 
